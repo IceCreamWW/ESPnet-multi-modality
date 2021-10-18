@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-<div align="left"><img src="doc/image/espnet_logo1.png" width="550"/></div>
-
 # ESPnet: end-to-end speech processing toolkit
 
 |system/pytorch ver.|1.3.1|1.4.0|1.5.1|1.6.0|1.7.1|1.8.1|1.9.0|
@@ -687,4 +684,3 @@ The sample rate of the audio must be consistent with that of the data used in tr
   organization={IEEE},
 }
 ```
-=======
