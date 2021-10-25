@@ -289,7 +289,7 @@ class ESPnetASRMTLFusionModel(AbsESPnetModel):
 
             text_encoder_out, text_encoder_out_lens = self.encode_text(text_in, text_in_lengths)
 
-            if self.swap_embedding_ratio < 0:
+            if self.swap_embedding_ratio > 0:
                 alignment_cumsum = ((torch.cumsum(alignment, dim=1)  - 1) // (self.subsample_factor // 2) - 1) // (self.subsample_factor // 2)
                 alignment[:,0] = alignment_cumsum[:,0]
                 alignment[:,1:] = (alignment_cumsum[:,1:] - alignment_cumsum[:,:-1])
