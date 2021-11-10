@@ -53,7 +53,6 @@ dump is performed with standard espnet recipe, data is dump directory should be 
 
 ### stage 2: training
 
-<<<<<<< HEAD
 #### ASR
 
 Run `amlt run philly/run.s12t6share2.mse_ctc01.yaml` 
@@ -69,20 +68,6 @@ Run `amlt run philly/run.slu.yaml`
 
 set both `mse_ctc_weight` to and `bert_ctc_Weight` to 0 can disable the loss at encoder end (set `use_mse_ctc` or `use_bert_ctc`  to `False` won't make sense since it controls the ctc type)
 
-##### tips for reproduction
-
-if the project is reproduced on other tools, some details should be taken care of:
-
-- The online torch stft by default use 512 windows length and 128 hop lengths. However, to match the force alignment result, windows length should be set to 400 and hop length to 160.
-- If g2p_en is used to perform g2p operation, the default cmudict should be replaced with official librispeech lexicon. utterances that have different phonemes in force alignment result and g2p result should not perform swap embedding.
-- For rep-phoneme, silence at begin and end should be modelled differently as silence in middle of a sentence.
-- swap embedding cannot be done by `a,b = b,a` since tensors with grad use shallow copy by default, check the mask implementation in this repo.
-- swap embedding should be added after the model is close to convergence
-
-## Inference
-=======
-Run `amlt run philly/run.s12t6share2.mse_ctc01.yaml` 
-
 ##### parameter explanation (in config file)
 
 `use_mse_ctc`: use Euclidean or dot product as distance metrices
@@ -104,13 +89,3 @@ if the project is reproduced on other tools, some details should be taken care o
 ## Inference
 
 Since multi-processing decoding meets some unknown issue and some of decoding processes might be killed. Run ```amlt run philly/run.decode.yaml``` for a `sleep` job, ssh to the target machine and start the decoding manually.
-
->>>>>>> 3b04fdd3505db5269044c6e67c8ffc7ee75970bb
-
-Since multi-processing decoding meets some unknown issue and some of decoding processes might be killed. Run ```amlt run philly/run.decode.yaml``` for a `sleep` job, ssh to the target machine and start the decoding manually.
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 3b04fdd3505db5269044c6e67c8ffc7ee75970bb
