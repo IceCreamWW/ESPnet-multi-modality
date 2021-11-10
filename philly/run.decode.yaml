@@ -1,0 +1,42 @@
+description: librispeech_espnet_inference
+target:
+  service: amlk8s
+  name: a100-scus
+  # name: itp-v100-scus
+  vc: csr-itp-speech
+  # queue: bonus
+environment:
+  image: espnet/espnet:gpu-latest
+  registry: docker.io
+  setup:
+  - apt-get install sudo
+  - cd tools/; make
+  - sudo apt install vim -y
+  - sudo apt install tmux -y
+  - export PYTHONPATH=`pwd`:$$PYTHONPATH
+code:
+  local_dir: $CONFIG_DIR/..
+storage:
+  blob_user:
+    storage_account_name: tsstd01scus
+    container_name: users
+    mount_dir: /blob/tsst/users
+    mount_options:
+    - -o
+    - attr_timeout=240
+    - -o
+    - entry_timeout=240
+    - -o
+    - negative_timeout=120
+    - -o
+    - allow_other
+    - --log-level=LOG_WARNING
+    - --file-cache-timeout-in-seconds=0
+jobs: #one node
+- command:
+  - python -V
+  - sleep infinity
+  name: espnet_decode
+  sku: G8
+  sku_count: 1
+

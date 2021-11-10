@@ -1,0 +1,46 @@
+description: librispeech_espnet_train_mtl_fusion_bert_s12t6share2_mse_ctc01
+target:
+  service: amlk8s
+  name: a100-scus
+  # name: itp-v100-scus
+  vc: csr-itp-speech
+  # vc: csr-itp
+  # queue: bonus
+environment:
+  image: espnet/espnet:gpu-latest
+  registry: docker.io
+  setup:
+  - apt-get install sudo
+  - cd tools/; make
+  - export PYTHONPATH=`pwd`:$$PYTHONPATH
+code:
+  local_dir: $CONFIG_DIR/..
+storage:
+  blob_user:
+      # storage_account_name: tsstd01wus2
+    storage_account_name: tsstd01scus
+    container_name: users
+    mount_dir: /blob/tsst/users
+    mount_options:
+    - -o
+    - attr_timeout=240
+    - -o
+    - entry_timeout=240
+    - -o
+    - negative_timeout=120
+    - -o
+    - allow_other
+    - --log-level=LOG_WARNING
+    - --file-cache-timeout-in-seconds=0
+jobs:
+- aml_mpirun:
+    communicator: OpenMpi
+    process_count_per_node: 1
+  command:
+  - python -V
+  - cd ./egs2/librispeech/asr2; bash run/run.itp.sh --asr_config conf/tuning/train_asr_transformer_mtl_fusion_bert_s12_t6_share2_mse_ctc01_16M.yaml --train_set "train_960" --stage 9 --stop-stage 9
+  - cd ./egs2/librispeech/asr2; bash run/run.itp.sh --asr_config conf/tuning/train_asr_transformer_mtl_fusion_bert_s12_t6_share2_mse_ctc01_16M.yaml --train_set "train_960" --stage 11 --stop-stage 11
+  - cd ./egs2/librispeech/asr2; bash run/run.itp.sh --asr_config conf/tuning/train_asr_transformer_mtl_fusion_bert_s12_t6_share2_mse_ctc01_tune_16M.yaml --train_set "train_960" --stage 11 --stop-stage 11 --init_param "/blob/tsst/users/v-weiwang1/espnet/egs2/librispeech/asr2/exp/asr_train_asr_transformer_mtl_fusion_bert_s12_t6_share2_mse_ctc01_16M_raw_en_bpephn_in/model.acc.ave.pth" 
+  name: librispeech_espnet_train_mtl_fusion_bert_s12t6share2_mse_ctc01
+  sku: G8
+  sku_count: 4
