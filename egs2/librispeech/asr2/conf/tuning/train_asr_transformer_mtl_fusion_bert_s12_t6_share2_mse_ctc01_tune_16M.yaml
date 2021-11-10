@@ -77,7 +77,6 @@ model_conf:
     text_in_mask_ratio: 0.2
     swap_embedding_ratio: 0.0
     length_normalized_loss: false
-    speech_use_shared: true
     subsample_factor: 4
 
 optim: adam
